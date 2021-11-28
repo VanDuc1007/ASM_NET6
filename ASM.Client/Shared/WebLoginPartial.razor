@@ -1,0 +1,68 @@
+﻿@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
+
+
+<ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="cart" href="/Cart">
+            @if (cart != null && cart != "")
+            {
+                <img id="imgCart" src="image/cartA.png" style="width:30px" />
+                
+            }
+            else
+            {
+                <img id="imgCart" src="image/cart.png"  style="width:30px" />
+            }
+        </a>
+    </li>
+</ul>
+<ul class="navbar-nav" id="navLogin">
+    @if (emailAddress != null && emailAddress != "")
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="information" href="/Info">
+                Hello @emailAddress ! |
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="history" href="/History">
+                Đơn Hàng |
+            </a>
+        </li>
+        <li class="nav-item">
+                <button id="logout" type="button" @onclick="Logout" class="nav-link btn btn-primary">Logout</button>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="register" href="/Register">Đăng Kí</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="login" href="/Login">Đăng Nhập</a>
+        </li>
+    }
+</ul>
+    @code {
+        string emailAddress;
+        string cart;
+
+        protected override async Task OnInitializedAsync()
+        {
+            emailAddress = sessionStorage.GetItem<string>("Email");
+            cart = sessionStorage.GetItem<string>("cart");
+        }
+
+        protected void o()
+        {
+            emailAddress = sessionStorage.GetItem<string>("Email");
+            cart = sessionStorage.GetItem<string>("cart");
+        }
+        protected void Logout()
+        {
+            sessionStorage.RemoveItem("AccessToken");
+            sessionStorage.RemoveItem("Email");
+            NavigationManager.NavigateTo("/",true);
+        }
+    }

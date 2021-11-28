@@ -1,0 +1,73 @@
+﻿@page "/login"
+@using System.Web
+@using System.ComponentModel.DataAnnotations
+@layout LoginLayout;
+@inject NavigationManager NavigationManager
+@attribute [AllowAnonymous]
+
+<div class="col-md-8 offset-md-3 mt-5">
+    <div class="card">
+        <h4 class="card-header text-center">Đăng Nhập</h4>
+        <div class="card-body">
+            <div class="form-group">
+                <label class="text-uppercase" asp-for="User Name"></label>
+                <input type="text" id="username" placeholder="User name" @bind="@username" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input type="password" id="password" placeholder="Pass Word" @bind="@password" @onkeypress="Enter" />
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input">
+                    <small>Remember Me</small>
+                </label>
+                <button type="submit" class="btn btn-login btn-primary float-right" @onclick="CheckLogin">Đăng nhập</button>
+            </div>
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <div class="alert alert-danger mt-3 mb-0">@((MarkupString)error)</div>
+            }
+        </div>
+    </div>
+</div>
+@code{
+    private bool loading;
+    private string error;
+
+    string username = "";
+    string password = "";
+
+    private string Encode(string param)
+    {
+        return HttpUtility.UrlEncode(param);
+    }
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            if (password != "")
+            {
+                CheckLogin();
+            }
+        }
+    }
+    private void CheckLogin()
+    {
+        error = "";
+        if (username == "")
+        {
+            error = "- Bạn cần nhập user name.";
+        }
+        if (password == "")
+        {
+            error += (error == "" ? "" : "<br/>") + "- Bạn cần nhập pass word.";
+        }
+        if (error == "")
+        {
+            NavigationManager.NavigateTo("CheckLogin?paramUsername=" + @Encode(@username)
+                + "&paramPassword=" + @Encode(@password), true); ;
+
+        }
+    }
+}

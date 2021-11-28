@@ -1,0 +1,54 @@
+﻿@page "/khachhanglist"
+
+@using ASM.Share.Models
+@using ASM.Server.Data
+@inject ASM.Share.Models.IKhachhangSvc _khachhangService
+
+<h1> Danh sách Khách Hàng </h1>
+
+@if (nguoidungs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Ngày sinh</th>
+                <th>Phone Number</th>
+                <th>Email Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in nguoidungs)
+            {
+                <tr>
+                    <td>@item.FullName</td>
+                    <td>@item.Ngaysinh</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.EmailAddress</td>
+
+                    @*<td>
+                        <a class="btn btn-info" href="/NguoidungDialog/@item.KhachhangID">Sửa</a>
+                        <a class="btn btn-warning" @onclick="@(()=> Delete(item.KhachhangID))">Xóa</a>
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public List<Khachhang> nguoidungs;
+    protected override void OnInitialized()
+    {
+        nguoidungs = _khachhangService.GetKhachhangAll();
+    }
+    private void Delete(int id)
+    {
+        // _nguoidungService.AddNguoidungDelete(id);
+        // employees = _service.GetEmployees();
+    }
+}
